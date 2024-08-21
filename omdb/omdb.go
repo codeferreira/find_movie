@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type Result struct {
@@ -20,7 +21,10 @@ type SearchResult struct {
 }
 
 func Search(apiKey string, query string) (Result, error) {
-	resp, err := http.Get("https://www.omdbapi.com/?s=" + query + "&apikey=" + apiKey)
+	q := url.Values{}
+	q.Add("apikey", apiKey)
+	q.Add("s", query)
+	resp, err := http.Get("https://www.omdbapi.com/?" + q.Encode())
 	if err != nil {
 		return Result{}, fmt.Errorf("failed to get response: %w", err)
 	}
